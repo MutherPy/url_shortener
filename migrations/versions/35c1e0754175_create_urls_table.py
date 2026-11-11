@@ -20,10 +20,11 @@ def upgrade() -> None:
     op.execute("""
     CREATE TABLE urls (
         code VARCHAR(9) PRIMARY KEY,
-        original_url VARCHAR(2049),
-        shortened_url VARCHAR(150)
+        original_url VARCHAR(2049) NOT NULL ,
+        shortened_url VARCHAR(150) NOT NULL ,
+        created_at DATE NOT NULL DEFAULT CURRENT_TIMESTAMP
     )
-               """)
+   """)
     op.execute("""
         CREATE SEQUENCE urls_id_seq
     AS BIGINT
@@ -35,5 +36,9 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    # Write SQL here to reverse the changes made by upgrade().
-    pass
+    op.execute("""
+               DROP TABLE urls;
+               """)
+    op.execute("""
+               DROP SEQUENCE urls_id_seq;
+               """)

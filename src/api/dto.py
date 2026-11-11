@@ -1,7 +1,7 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AnyHttpUrl
 
 class UrlInput(BaseModel):
-    url: str = Field(..., max_length=2048, min_length=1)
+    url: AnyHttpUrl = Field(..., max_length=2048, min_length=1)
 
 
 class UrlOutput(BaseModel):

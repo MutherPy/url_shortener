@@ -3,7 +3,7 @@ import uvicorn
 from src.app.deps import DependenciesContainer
 from src.app.lifespan import build_lifespan
 from src.api.router import router
-from src.app.container import build_app_container
+from src.app.container import Container
 from src.application.domain.url_service import UrlService
 from src.application.services.short_enc_deco import ShortenerService
 from src.intrastructure.db.connection import DbConnection
@@ -13,16 +13,23 @@ from configs import Configs
 
 configs = Configs.build_configs()
 
+db_conn = DbConnection(config=configs.db)
+
 deps = DependenciesContainer(
     service=UrlService,
     repository=UrlRepository,
     configs=configs,
-    connection=DbConnection(configs.db),
+    connection=db_conn,
     shortener=ShortenerService
 )
 
+container = Container(
+    deps=deps,
+    connection=db_conn,
+)
+
 app = FastAPI(
-    lifespan=build_lifespan(c=build_app_container, deps=deps),
+    lifespan=build_lifespan(container=container, deps=deps)
 )
 app.include_router(router)
 

@@ -2,11 +2,13 @@ from src.app.deps import DependenciesContainer
 
 
 class Container:
-    def __init__(self, connection):
+    def __init__(self, connection, deps: DependenciesContainer):
         self.__connection = connection
+        self.__deps = deps
 
     async def init(self):
         await self.__connection.connect()
+        self.__deps.init()
 
     async def start(self):
         ...
@@ -15,9 +17,4 @@ class Container:
         await self.__connection.close()
 
 
-def build_app_container(deps: DependenciesContainer) -> Container:
-    return Container(
-        connection=deps.get_connection_proxy(),
-    )
-
-__all__ = ["build_app_container", "Container"]
+__all__ = ["Container"]

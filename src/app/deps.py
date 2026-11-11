@@ -21,23 +21,24 @@ class DependenciesContainer:
         self.__connection = connection
         self.__shortener = shortener
 
-    def get_service(self) -> IUrlService:
-        return self.__service.build(
-            url_repository=self.get_repository(),
-            config=self.get_configs().app,
-            shortener=self.get_shortener()
+    def init(self):
+        self.__repository = self.__repository.build(
+            connection=self.__connection.connection,
+        )
+        self.__service = self.__service.build(
+            url_repository=self.__repository,
+            config=self.__configs.app,
+            shortener=self.__shortener
         )
 
+    def get_service(self) -> IUrlService:
+        return self.__service
+
     def get_repository(self) -> IUrlRepository:
-        return self.__repository.build(
-            connection=self.get_connection()
-        )
+        return self.__repository
 
     def get_configs(self) -> Configs:
         return self.__configs
-
-    def get_connection(self):
-        return self.__connection.connection
 
     def get_shortener(self):
         return self.__shortener

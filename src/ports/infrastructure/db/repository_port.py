@@ -7,10 +7,11 @@ class IUrlRepository(Protocol):
     async def get_next_seq(self) -> int:
         pass
 
-    async def create(self, url: UrlCreateDbDTO):
+    async def create(self, url: UrlCreateDbDTO) -> bool:
+        """Return True on insertion, or False if the code is already taken."""
         pass
 
-    async def get(self, code: str) -> str:
+    async def get(self, code: str) -> str | None:
         pass
 
     @classmethod
