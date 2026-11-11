@@ -1,0 +1,5 @@
+virt
+pg_dump
+.env
+__pycache__
+.idea
