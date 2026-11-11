@@ -21,8 +21,7 @@ def upgrade() -> None:
     CREATE TABLE urls (
         code VARCHAR(9) PRIMARY KEY,
         original_url VARCHAR(2049) NOT NULL ,
-        shortened_url VARCHAR(150) NOT NULL ,
-        created_at DATE NOT NULL DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
    """)
     op.execute("""

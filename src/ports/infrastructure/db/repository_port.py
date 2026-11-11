@@ -1,5 +1,6 @@
-from typing import Protocol
+from typing import Protocol, Type
 
+from src.ports.infrastructure.cache.cache_port import IUrlRepositorySeqCache
 from src.ports.infrastructure.db.dto import UrlCreateDbDTO
 
 
@@ -15,5 +16,5 @@ class IUrlRepository(Protocol):
         pass
 
     @classmethod
-    def build(cls, connection):
+    def build(cls, connection, seq_cache: Type[IUrlRepositorySeqCache], cache_size: int):
         pass

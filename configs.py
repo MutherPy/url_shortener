@@ -15,6 +15,7 @@ class DbConfigs(BaseSettings):
 
 class AppConfig(BaseSettings):
     BASE_HOST: str
+    CACHE_SIZE: int
 
     model_config = SettingsConfigDict(
         extra="ignore",

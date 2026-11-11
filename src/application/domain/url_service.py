@@ -5,7 +5,6 @@ from src.ports.infrastructure.db.dto import UrlCreateDbDTO
 from src.ports.infrastructure.db.repository_port import IUrlRepository
 from src.ports.services.shortener import IShortener
 
-
 MAX_CODE_GENERATION_ATTEMPTS = 10
 
 
@@ -16,23 +15,21 @@ class UrlService:
         self._app_config = config
 
     async def create(self, url_dto: UrlCreateDomainDTO) -> UrlCreatedDomainDTO:
-        for _ in range(MAX_CODE_GENERATION_ATTEMPTS):
-            next_id = await self._url_repository.get_next_seq()
-            new_code = self._shortener.encode(next_id)
-            new_short_url = self._shortener.generate_short_url(
-                base_url=self._app_config.BASE_HOST,
-                code=new_code,
-            )
-            to_db = UrlCreateDbDTO(
-                code=new_code,
-                original_url=url_dto.original_url,
-                short_url=new_short_url,
-            )
-            if await self._url_repository.create(url=to_db):
-                return UrlCreatedDomainDTO(code=new_code, short_url=new_short_url)
+        next_id = await self._url_repository.get_next_seq()
+        new_code = self._shortener.encode(next_id)
+        new_short_url = self._shortener.generate_short_url(
+            base_url=self._app_config.BASE_HOST,
+            code=new_code,
+        )
+        to_db = UrlCreateDbDTO(
+            code=new_code,
+            original_url=url_dto.original_url
+        )
+        if await self._url_repository.create(url=to_db):
+            return UrlCreatedDomainDTO(code=new_code, short_url=new_short_url)
 
         raise CodeGenerationError(
-            f"Could not allocate a short code after {MAX_CODE_GENERATION_ATTEMPTS} attempts"
+            f"Could not allocate a short code"
         )
 
     async def get(self, code: str) -> str:

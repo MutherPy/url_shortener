@@ -2,6 +2,7 @@ from configs import Configs
 from src.intrastructure.db.connection import DbConnection
 
 from src.ports.domain.service_port import IUrlService
+from src.ports.infrastructure.cache.cache_port import IUrlRepositorySeqCache
 from src.ports.infrastructure.db.repository_port import IUrlRepository
 from src.ports.services.shortener import IShortener
 
@@ -13,17 +14,21 @@ class DependenciesContainer:
             repository: type[IUrlRepository],
             configs: Configs,
             connection: DbConnection,
-            shortener: type[IShortener]
+            shortener: type[IShortener],
+            seq_cache: type[IUrlRepositorySeqCache],
     ):
         self.__service = service
         self.__repository = repository
         self.__configs = configs
         self.__connection = connection
         self.__shortener = shortener
+        self.__seq_cache = seq_cache
 
     def init(self):
         self.__repository = self.__repository.build(
             connection=self.__connection.connection,
+            seq_cache=self.__seq_cache,
+            cache_size=self.__configs.app.CACHE_SIZE
         )
         self.__service = self.__service.build(
             url_repository=self.__repository,

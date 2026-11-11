@@ -6,6 +6,7 @@ from src.api.router import router
 from src.app.container import Container
 from src.application.domain.url_service import UrlService
 from src.application.services.short_enc_deco import ShortenerService
+from src.intrastructure.cache.seq_cache import UrlRepositorySeqCache
 from src.intrastructure.db.connection import DbConnection
 from src.intrastructure.db.repository import UrlRepository
 
@@ -20,7 +21,8 @@ deps = DependenciesContainer(
     repository=UrlRepository,
     configs=configs,
     connection=db_conn,
-    shortener=ShortenerService
+    shortener=ShortenerService,
+    seq_cache=UrlRepositorySeqCache
 )
 
 container = Container(

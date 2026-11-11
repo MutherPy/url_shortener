@@ -1,5 +1,4 @@
 from asyncpg import Connection, create_pool
-
 from configs import DbConfigs
 
 

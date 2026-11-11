@@ -3,7 +3,6 @@ from contextlib import asynccontextmanager
 from src.app.deps import DependenciesContainer
 from src.app.container import Container
 from fastapi import FastAPI
-from typing import Callable
 
 def build_lifespan(container: Container, deps: DependenciesContainer):
     @asynccontextmanager
