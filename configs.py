@@ -1,5 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dataclasses import dataclass
+from pydantic import Field
+
 
 class DbConfigs(BaseSettings):
     POSTGRES_HOST: str
@@ -7,6 +9,8 @@ class DbConfigs(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
+    MIN_POOL_SIZE: int = Field(default=10)
+    MAX_POOL_SIZE: int = Field(default=50)
 
     model_config = SettingsConfigDict(
         extra="ignore",
