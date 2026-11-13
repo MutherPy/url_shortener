@@ -68,10 +68,12 @@ class UrlRepositorySeqCache:
             pass
 
     async def __cache_getter(self) -> int:
-        while len(self.__cache) <= 0:
-            if not self.__lock.locked():
+        while not self.__cache:
+            if self.__lock.locked():
+                async with self.__lock:
+                    pass
+            else:
                 await self._set()
-            continue
         return self.__cache.popleft()
 
     async def get(self) -> int:
