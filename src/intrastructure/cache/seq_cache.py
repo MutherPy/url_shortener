@@ -60,8 +60,15 @@ class UrlRepositorySeqCache:
         except CancelledError:
             pass
 
+    async def __cache_getter(self) -> int:
+        if len(self.__cache) <= 0:
+            while len(self.__cache):
+                if not self.__lock.locked():
+                    await self._set()
+                continue
+        return self.__cache.popleft()
 
     async def get(self) -> int:
-        res = self.__cache.popleft()
+        res = await self.__cache_getter()
         self.__window.append(monotonic())
         return res
