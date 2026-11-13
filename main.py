@@ -17,6 +17,7 @@ configs = Configs.build_configs()
 db_conn = DbConnection(config=configs.db)
 repository_cache = UrlRepositorySeqCache(cache_size=configs.app.CACHE_SIZE)
 url_repository = UrlRepository(db_conn_proxy=db_conn, seq_cache=repository_cache)
+repository_cache.set_retrieve_fn(url_repository.get_next_seq_list)
 url_service = UrlService(url_repository=url_repository, shortener=ShortenerService, config=configs.app)
 
 deps = DependenciesContainer(
@@ -26,6 +27,9 @@ deps = DependenciesContainer(
 
 container = Container(
     connection=db_conn,
+    to_start = [
+        repository_cache,
+    ]
 )
 
 app = FastAPI(

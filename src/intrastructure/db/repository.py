@@ -10,9 +10,8 @@ class UrlRepository:
     def __init__(self, db_conn_proxy: IDbConnection, seq_cache: IUrlRepositorySeqCache):
         self.__db_conn_proxy = db_conn_proxy
         self.__seq_cache = seq_cache
-        self.__seq_cache.set_retrieve_fn(self.__get_next_seq_list)
 
-    async def __get_next_seq_list(self, size) -> list[int]:
+    async def get_next_seq_list(self, size) -> list[int]:
         async with self.__db_conn_proxy.connection.acquire() as connection:
             return await connection.fetchval(
             """
