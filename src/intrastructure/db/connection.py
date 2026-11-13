@@ -7,7 +7,7 @@ class DbConnection:
         self._config = config
         self._pool: Pool
 
-    async def connect(self) -> Pool:
+    async def connect(self):
         """Create a database connection that the caller is responsible for closing."""
         self._pool = await create_pool(
             host=self._config.POSTGRES_HOST,
@@ -18,7 +18,6 @@ class DbConnection:
             min_size=self._config.MIN_POOL_SIZE,
             max_size=self._config.MAX_POOL_SIZE
         )
-        return self._pool
 
     @property
     def connection(self) -> Pool:

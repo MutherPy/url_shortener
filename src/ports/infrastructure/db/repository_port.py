@@ -14,7 +14,3 @@ class IUrlRepository(Protocol):
 
     async def get(self, code: str) -> str | None:
         pass
-
-    @classmethod
-    def build(cls, connection, seq_cache: Type[IUrlRepositorySeqCache], cache_size: int):
-        pass

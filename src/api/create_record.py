@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from src.api.deps import get_url_service
 from src.api.dto import UrlInput, UrlOutput
-from src.application.domain.exc.domain_exc import CodeGenerationError
+from src.domain.exc.domain_exc import CodeGenerationError
 from src.ports.domain.dto import UrlCreateDomainDTO
 from src.ports.domain.service_port import IUrlService
 from starlette import status

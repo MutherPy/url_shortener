@@ -1,5 +1,5 @@
 from configs import AppConfig
-from src.application.domain.exc.domain_exc import CodeGenerationError, NotFoundException
+from src.domain.exc.domain_exc import CodeGenerationError, NotFoundException
 from src.ports.domain.dto import UrlCreateDomainDTO, UrlCreatedDomainDTO
 from src.ports.infrastructure.db.dto import UrlCreateDbDTO
 from src.ports.infrastructure.db.repository_port import IUrlRepository
@@ -36,7 +36,3 @@ class UrlService:
         if result := await self._url_repository.get(code=code):
             return result
         raise NotFoundException
-
-    @classmethod
-    def build(cls, url_repository: IUrlRepository, shortener: IShortener, config: AppConfig) -> 'UrlService':
-        return cls(url_repository=url_repository, shortener=shortener, config=config)

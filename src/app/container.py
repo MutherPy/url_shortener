@@ -1,14 +1,12 @@
-from src.app.deps import DependenciesContainer
+from src.ports.infrastructure.db.db_conn_proxy_port import IDbConnection
 
 
 class Container:
-    def __init__(self, connection, deps: DependenciesContainer):
+    def __init__(self, connection: IDbConnection):
         self.__connection = connection
-        self.__deps = deps
 
     async def init(self):
         await self.__connection.connect()
-        self.__deps.init()
 
     async def start(self):
         ...

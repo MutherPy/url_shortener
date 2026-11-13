@@ -7,9 +7,11 @@ from fastapi import FastAPI
 def build_lifespan(container: Container, deps: DependenciesContainer):
     @asynccontextmanager
     async def lifespan(app: FastAPI):
-        await container.init()
-        app.state.container = deps
-        await container.start()
-        yield
-        await container.stop()
+        try:
+            await container.init()
+            app.state.container = deps
+            await container.start()
+            yield
+        finally:
+            await container.stop()
     return lifespan

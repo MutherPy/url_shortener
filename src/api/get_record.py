@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Response, HTTPException
 from src.api.deps import get_url_service
-from src.application.domain.exc.domain_exc import NotFoundException
+from src.domain.exc.domain_exc import NotFoundException
 from src.ports.domain.service_port import IUrlService
 from starlette import status
 from starlette.responses import RedirectResponse

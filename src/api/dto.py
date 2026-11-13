@@ -6,4 +6,4 @@ class UrlInput(BaseModel):
 
 class UrlOutput(BaseModel):
     short_code: str
-    short_url: str
+    short_url: AnyHttpUrl
