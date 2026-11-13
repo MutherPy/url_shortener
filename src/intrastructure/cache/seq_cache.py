@@ -1,4 +1,4 @@
-from asyncio import Lock, create_task, sleep, CancelledError
+from asyncio import Lock, create_task, sleep, CancelledError, Task
 from typing import Callable, Awaitable
 from collections import deque
 from time import monotonic
@@ -21,7 +21,7 @@ class UrlRepositorySeqCache:
 
         self.__refill_time = 0.1
 
-        self.__tasks = []
+        self.__tasks: list[Task] = []
 
     async def start(self):
         self.__tasks.append(create_task(self.check_window()))
@@ -58,19 +58,20 @@ class UrlRepositorySeqCache:
                     new_size = self.__min_cache_size * (t if t >= 1 else 1)
                     self.__cache_size = new_size if new_size >= self.__min_cache_size else self.__min_cache_size
                 self.__refill_size = int(reqs_per_refill_time)
-
-                if not self.__lock.locked() and len(self.__cache) <= self.__refill_size:
-                    await self._set()
+                try:
+                    if not self.__lock.locked() and len(self.__cache) <= self.__refill_size:
+                        await self._set()
+                except Exception:
+                    pass
                 await sleep(self.__refill_time)
         except CancelledError:
             pass
 
     async def __cache_getter(self) -> int:
-        if len(self.__cache) <= 0:
-            while len(self.__cache):
-                if not self.__lock.locked():
-                    await self._set()
-                continue
+        while len(self.__cache) <= 0:
+            if not self.__lock.locked():
+                await self._set()
+            continue
         return self.__cache.popleft()
 
     async def get(self) -> int:
