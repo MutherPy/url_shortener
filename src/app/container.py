@@ -21,8 +21,8 @@ class Container:
         await gather(*map(lambda x: x.start(), self.to_start))
 
     async def stop(self):
-        await self.__connection.close()
         await gather(*map(lambda x: x.stop(), self.to_start))
+        await self.__connection.close()
 
 
 __all__ = ["Container"]

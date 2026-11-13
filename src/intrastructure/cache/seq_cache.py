@@ -10,6 +10,7 @@ class UrlRepositorySeqCache:
         self.__lock = Lock()
         self.__retrieve_fn: Callable[[int], Awaitable[list[int]]]
 
+        self.__min_cache_size = cache_size
         self.__cache_size = cache_size
         self.__refill_size = self.__cache_size // 3
 
@@ -50,9 +51,13 @@ class UrlRepositorySeqCache:
 
                 if self.__rate > self.__cache_size:
                     t = round(self.__rate / self.__cache_size)
-                    new_size = self.__cache_size * t if t >= 1 else 1
+                    new_size = self.__cache_size * (t if t >= 1 else 1)
                     self.__cache_size = new_size if new_size <= self.__max_cache_size else self.__max_cache_size
-                    self.__refill_size = int(reqs_per_refill_time)
+                else:
+                    t = round(self.__rate / self.__min_cache_size)
+                    new_size = self.__min_cache_size * (t if t >= 1 else 1)
+                    self.__cache_size = new_size if new_size >= self.__min_cache_size else self.__min_cache_size
+                self.__refill_size = int(reqs_per_refill_time)
 
                 if not self.__lock.locked() and len(self.__cache) <= self.__refill_size:
                     await self._set()
