@@ -1,0 +1,15 @@
+.git
+.env
+.env.*
+.idea
+.venv
+venv
+virt
+pg_dump
+**/__pycache__
+**/*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+tests
+tst.py
